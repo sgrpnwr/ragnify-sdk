@@ -1,0 +1,1 @@
+{"version":3,"file":"LogoutButton.d.ts","sourceRoot":"","sources":["../../../src/components/LogoutButton.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAK,MAAM,OAAO,CAAC;AAG1B,KAAK,KAAK,GAAG;IACX,QAAQ,EAAE,MAAM,IAAI,CAAC;CACtB,CAAC;AAEF,iBAAS,YAAY,CAAC,EAAE,QAAQ,EAAE,EAAE,KAAK,qBAMxC;;AAED,wBAAwC"}
