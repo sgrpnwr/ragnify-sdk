@@ -31,7 +31,10 @@ export default function ChatPanel({
   tenantId = "",
   onNavigateToError,
 }: Props) {
-  const { user } = useSapientAuth();
+  const {
+    user,
+    config: { apiKey },
+  } = useSapientAuth();
   const [query, setQuery] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [messages, setMessages] = React.useState<Message[]>([]);
@@ -154,6 +157,7 @@ export default function ChatPanel({
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
+          "x-sdk-api-key": apiKey,
         },
         body: JSON.stringify({ question: currentQuery }),
       });

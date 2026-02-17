@@ -93,7 +93,7 @@ export const SapientAuthProvider = ({
     const url = `${baseUrl}${endpoint}`;
 
     const headers: any = {
-      "x-api-key": apiKey,
+      "x-sdk-api-key": apiKey,
     };
 
     if (accessToken) {

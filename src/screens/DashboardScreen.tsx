@@ -103,6 +103,7 @@ export default function AdminDashboard({
       const response = await fetch(`${baseUrl}/auth/users`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          'x-sdk-api-key': config?.apiKey || '',
         },
       });
 
@@ -139,6 +140,7 @@ export default function AdminDashboard({
       const response = await fetch(`${baseUrl}/auth/tenants`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          'x-sdk-api-key': config?.apiKey || '',
         },
       });
 
@@ -180,6 +182,7 @@ export default function AdminDashboard({
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
+              'x-sdk-api-key': config?.apiKey || '',
             },
           },
         );
@@ -247,6 +250,7 @@ export default function AdminDashboard({
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
+          "x-sdk-api-key": config?.apiKey || '',
         },
         body: JSON.stringify({
           text: textInput,
@@ -310,6 +314,7 @@ export default function AdminDashboard({
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
+          "x-sdk-api-key": config?.apiKey || '',
         },
       });
       console.log("Presign response:", resp);
@@ -323,6 +328,7 @@ export default function AdminDashboard({
         method: "PUT",
         headers: {
           "Content-Type": `${file.mimeType}`,
+          "x-sdk-api-key": config?.apiKey || '',
         },
         body: {
           uri: file.uri,
@@ -394,6 +400,7 @@ export default function AdminDashboard({
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
+          "x-sdk-api-key": config?.apiKey || '',
         },
         body: JSON.stringify({ roles: newRoles }),
       });
@@ -429,6 +436,7 @@ export default function AdminDashboard({
                 method: "DELETE",
                 headers: {
                   Authorization: `Bearer ${accessToken}`,
+                  "x-sdk-api-key": config?.apiKey || '',
                 },
               });
 
@@ -469,6 +477,7 @@ export default function AdminDashboard({
                   method: "DELETE",
                   headers: {
                     Authorization: `Bearer ${accessToken}`,
+                    "x-sdk-api-key": config?.apiKey || '',
                   },
                 },
               );
