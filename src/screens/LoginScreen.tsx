@@ -58,7 +58,7 @@ export default function LoginScreen({
       const baseUrl = config?.baseUrl || "http://localhost:8000";
       const res = await fetch(`${baseUrl}/auth/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", 'x-sdk-api-key': config?.apiKey || "" },
         body: JSON.stringify({ email, password }),
       });
 
