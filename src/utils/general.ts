@@ -8,5 +8,21 @@ export function generateNonce(length = 24) {
   }
   return result;
 }
+export const handleErrors = async (response: Response) => {
+    console.log('response', response, response.status, await response.text());
+        if(response.status === 401) {
+          throw Error("Unauthorized. Please try again later.");
+        }
+        if(response.status === 403) {
+          throw Error("Forbidden. You don't have permission to access this resource.");
+        }
+        if(response.status >= 500) {
+          throw Error("Server error. Please try again later.");
+        }
+        if(response.status === 429) {
+          throw new Error("Too many requests. Please try again later.");
+        }
+        throw new Error("Something went wrong. Please try again later.");
 
+  }
 

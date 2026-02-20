@@ -15,7 +15,7 @@ import {
 import { useSapientAuth } from "../context/AuthContext";
 import { extractUserFromResponse } from "../utils/auth";
 import { loginSchema } from "../validators/auth";
-import { generateNonce } from "../utils/general";
+import { generateNonce, handleErrors } from "../utils/general";
 
 type Props = {
   onLoginSuccess?: (user: any) => void;
@@ -65,13 +65,8 @@ export default function LoginScreen({
       });
 
       if (!res?.ok) {
-        const errJson = await res.json().catch(() => null);
         const serverMsg =
-          errJson?.errorMessage ??
-          errJson?.message ??
-          (await res.text().catch(() => null)) ??
-          res.statusText ??
-          `Login failed ${res.status}`;
+          await handleErrors(res);
         setErrors({
           _general: String(serverMsg),
           email: String(serverMsg),

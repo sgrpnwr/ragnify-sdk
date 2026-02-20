@@ -153,15 +153,78 @@ export const SapientAuthProvider = ({
     });
   }
 
+  function validateRegisterInput(
+    firstName: string,
+    lastName: string,
+    email: string,
+    pass: string,
+    roles?: any,
+  ) {
+    const errors: string[] = [];
+    // Email
+    if (
+      !email ||
+      typeof email !== "string" ||
+      !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)
+    ) {
+      errors.push("Invalid email address");
+    }
+    // Password
+    if (!pass || typeof pass !== "string" || pass.length < 6) {
+      errors.push("Password must be at least 6 characters long");
+    }
+    if (!/\d/.test(pass)) {
+      errors.push("Password must contain at least one number");
+    }
+    // First name
+    if (
+      !firstName ||
+      typeof firstName !== "string" ||
+      firstName.trim().length < 2
+    ) {
+      errors.push("First name must be at least 2 characters long");
+    }
+    // Last name
+    if (
+      !lastName ||
+      typeof lastName !== "string" ||
+      lastName.trim().length < 2
+    ) {
+      errors.push("Last name must be at least 2 characters long");
+    }
+    // Roles (optional)
+    if (roles !== undefined && !Array.isArray(roles)) {
+      errors.push("Roles must be an array of strings");
+    }
+    return errors;
+  }
+
   async function register(
     firstName: string,
     lastName: string,
     email: string,
     pass: string,
+    roles?: any,
   ) {
+    const errors = validateRegisterInput(
+      firstName,
+      lastName,
+      email,
+      pass,
+      roles,
+    );
+    if (errors.length > 0) {
+      throw new Error(errors.join("\n"));
+    }
     return apiRequest("/auth/register", {
       method: "POST",
-      body: JSON.stringify({ firstName, lastName, email, password: pass }),
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        email,
+        password: pass,
+        ...(roles !== undefined ? { roles } : {}),
+      }),
     });
   }
 

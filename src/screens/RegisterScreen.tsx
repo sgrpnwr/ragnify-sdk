@@ -16,7 +16,7 @@ import {
 import { useSapientAuth } from "../context/AuthContext";
 import { extractUserFromResponse } from "../utils/auth";
 import { registerSchema } from "../validators/auth";
-import { generateNonce } from "../utils/general";
+import { generateNonce, handleErrors } from "../utils/general";
 
 type Props = {
   onRegisterSuccess?: (user: any) => void;
@@ -96,10 +96,7 @@ export default function RegisterScreen({
         return;
       }
 
-      const text = await res.text();
-      throw new Error(
-        text || res.statusText || `Request failed with status ${res.status}`,
-      );
+      await handleErrors(res);
     } catch (err: any) {
       const errorMessage = err.message ?? String(err);
       setErrors({ _general: errorMessage });

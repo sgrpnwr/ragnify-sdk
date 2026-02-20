@@ -13,7 +13,7 @@ import {
   View,
 } from "react-native";
 import { useSapientAuth } from "../context/AuthContext";
-import { generateNonce } from "../utils/general";
+import { generateNonce, handleErrors } from "../utils/general";
 
 type Tab = "upload" | "tenants" | "users";
 
@@ -77,6 +77,7 @@ export default function AdminDashboard({
     Authorization: `Bearer ${accessToken}`,
     "x-sdk-api-key": config?.apiKey || "",
   };
+  
   // Users state
   const [users, setUsers] = React.useState<User[]>([]);
 
@@ -111,15 +112,13 @@ export default function AdminDashboard({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to fetch users");
+        await handleErrors(response);
       }
 
       const data = await response.json();
-      console.log("Fetched users:", data.users);
       setUsers(data.users || []);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      Alert.alert("Error", "Failed to load users");
+    } catch (error: any) {
+      Alert.alert("Error", error?.message || "Failed to load users");
     } finally {
       setLoading(false);
     }
@@ -145,15 +144,12 @@ export default function AdminDashboard({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to fetch tenants");
+        await handleErrors(response);
       }
-
       const data = await response.json();
-      console.log("Fetched tenants:", data);
       setTenants(data.tenants || data.data || []);
-    } catch (error) {
-      console.error("Error fetching tenants:", error);
-      Alert.alert("Error", "Failed to load tenant information");
+    } catch (error: any) {
+      Alert.alert("Error", error?.message || "Failed to load tenant information");
     } finally {
       setLoading(false);
     }
@@ -191,7 +187,6 @@ export default function AdminDashboard({
           setUploadStatus(message);
           setUploadProgress(progress);
 
-          console.log("[FileStatus]", { status, progress, message });
 
           if (status === "embedding_completed") {
             showAlert(
@@ -220,7 +215,6 @@ export default function AdminDashboard({
           setCurrentFileKey(null);
         }
       } catch (error) {
-        console.error("Error polling file status:", error);
         attempts++;
         if (attempts < maxAttempts) {
           setTimeout(poll, 5000);
@@ -255,7 +249,7 @@ export default function AdminDashboard({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to submit text");
+        await handleErrors(response);
       }
 
       const data = await response.json();
@@ -275,15 +269,13 @@ export default function AdminDashboard({
         setUploadProgress(0);
       }, 3000);
     } catch (error: any) {
-      console.error("Error submitting text:", error);
-      showAlert("Error", error.message || "Failed to process text");
+      showAlert("Error", error?.message || "Failed to process text");
     } finally {
       setUploading(false);
     }
   };
 
   const handleUpload = async () => {
-    console.log("Upload PDF clicked");
     setUploading(true);
 
     try {
@@ -294,7 +286,6 @@ export default function AdminDashboard({
 
       if (result.canceled) {
         // User cancelled the picker
-        console.log("Document picker cancelled");
         setUploading(false);
         return;
       }
@@ -312,10 +303,8 @@ export default function AdminDashboard({
          ...mandatoryHeaders
         },
       });
-      console.log("Presign response:", resp);
       if (!resp.ok) {
-        const errorText = await resp.text();
-        throw new Error(`Presign request failed: ${errorText}`);
+        await handleErrors(resp)
       }
       const { uploadUrl, fileUrl, key } = await resp.json();
       void fileUrl;
@@ -346,7 +335,6 @@ export default function AdminDashboard({
       // Start polling for status
       pollFileStatus(key);
     } catch (error: any) {
-      console.error("Error picking document:", error);
       const errorMsg = error?.message || "Failed to pick document";
       showAlert("Error", errorMsg);
       setUploading(false);
@@ -400,14 +388,12 @@ export default function AdminDashboard({
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to update user role");
+        await handleErrors(response)
       }
 
       Alert.alert("Success", "User role updated successfully");
       fetchUsers();
     } catch (error: any) {
-      console.error("Error updating role:", error);
       Alert.alert("Error", error.message || "Failed to update user role");
     }
   };
@@ -432,14 +418,12 @@ export default function AdminDashboard({
               });
 
               if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || "Failed to delete user");
+                await handleErrors(response);
               }
 
               Alert.alert("Success", "User deleted successfully");
               fetchUsers();
             } catch (error: any) {
-              console.error("Error deleting user:", error);
               Alert.alert("Error", error.message || "Failed to delete user");
             }
           },
@@ -471,14 +455,12 @@ export default function AdminDashboard({
               );
 
               if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || "Failed to delete tenant");
+                await handleErrors(response);
               }
 
               Alert.alert("Success", "Tenant deleted successfully");
               fetchTenants();
             } catch (error: any) {
-              console.error("Error deleting tenant:", error);
               Alert.alert("Error", error.message || "Failed to delete tenant");
             }
           },
