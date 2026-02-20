@@ -1,6 +1,8 @@
 import React from "react";
 import type { ImageSourcePropType } from "react-native";
 
+import { generateNonce } from "../utils/general";
+
 export type SapientUser = {
   id?: string;
   firstName: string;
@@ -94,6 +96,8 @@ export const SapientAuthProvider = ({
 
     const headers: any = {
       "x-sdk-api-key": apiKey,
+      "x-request-timestamp": Date.now().toString(),
+      "x-request-nonce": generateNonce(),
     };
 
     if (accessToken) {

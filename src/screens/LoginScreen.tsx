@@ -15,6 +15,7 @@ import {
 import { useSapientAuth } from "../context/AuthContext";
 import { extractUserFromResponse } from "../utils/auth";
 import { loginSchema } from "../validators/auth";
+import { generateNonce } from "../utils/general";
 
 type Props = {
   onLoginSuccess?: (user: any) => void;
@@ -58,7 +59,8 @@ export default function LoginScreen({
       const baseUrl = config?.baseUrl || "http://localhost:8000";
       const res = await fetch(`${baseUrl}/auth/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", 'x-sdk-api-key': config?.apiKey || "" },
+        headers: { "Content-Type": "application/json", "x-request-timestamp": Date.now().toString(),
+            "x-request-nonce": generateNonce(),'x-sdk-api-key': config?.apiKey || "" ,},
         body: JSON.stringify({ email, password }),
       });
 

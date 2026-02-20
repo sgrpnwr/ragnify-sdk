@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import { useSapientAuth } from "../context/AuthContext";
+import { generateNonce } from "../utils/general";
 
 type Props = {
   baseUrl?: string;
@@ -158,6 +159,8 @@ export default function ChatPanel({
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
           "x-sdk-api-key": apiKey,
+          "x-request-timestamp": Date.now().toString(),
+          "x-request-nonce": generateNonce(),
         },
         body: JSON.stringify({ question: currentQuery }),
       });

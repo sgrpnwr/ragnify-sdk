@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 import { useSapientAuth } from "../context/AuthContext";
+import { generateNonce } from "../utils/general";
 
 type Tab = "upload" | "tenants" | "users";
 
@@ -70,7 +71,12 @@ export default function AdminDashboard({
   const [currentFileKey, setCurrentFileKey] = React.useState<string | null>(
     null,
   );
-
+  const mandatoryHeaders = {
+    "x-request-timestamp": Date.now().toString(),
+    "x-request-nonce": generateNonce(),
+    Authorization: `Bearer ${accessToken}`,
+    "x-sdk-api-key": config?.apiKey || "",
+  };
   // Users state
   const [users, setUsers] = React.useState<User[]>([]);
 
@@ -101,10 +107,7 @@ export default function AdminDashboard({
     try {
       setLoading(true);
       const response = await fetch(`${baseUrl}/auth/users`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'x-sdk-api-key': config?.apiKey || '',
-        },
+        headers: mandatoryHeaders,
       });
 
       if (!response.ok) {
@@ -138,10 +141,7 @@ export default function AdminDashboard({
     try {
       setLoading(true);
       const response = await fetch(`${baseUrl}/auth/tenants`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'x-sdk-api-key': config?.apiKey || '',
-        },
+        headers: mandatoryHeaders,
       });
 
       if (!response.ok) {
@@ -180,10 +180,7 @@ export default function AdminDashboard({
         const response = await fetch(
           `${baseUrl}/embedding/status/${encodedKey}`,
           {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              'x-sdk-api-key': config?.apiKey || '',
-            },
+            headers: mandatoryHeaders,
           },
         );
 
@@ -249,8 +246,7 @@ export default function AdminDashboard({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-          "x-sdk-api-key": config?.apiKey || '',
+         ...mandatoryHeaders,
         },
         body: JSON.stringify({
           text: textInput,
@@ -313,8 +309,7 @@ export default function AdminDashboard({
         }),
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-          "x-sdk-api-key": config?.apiKey || '',
+         ...mandatoryHeaders
         },
       });
       console.log("Presign response:", resp);
@@ -328,7 +323,7 @@ export default function AdminDashboard({
         method: "PUT",
         headers: {
           "Content-Type": `${file.mimeType}`,
-          "x-sdk-api-key": config?.apiKey || '',
+          ...mandatoryHeaders,
         },
         body: {
           uri: file.uri,
@@ -399,8 +394,7 @@ export default function AdminDashboard({
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-          "x-sdk-api-key": config?.apiKey || '',
+          ...mandatoryHeaders,
         },
         body: JSON.stringify({ roles: newRoles }),
       });
@@ -434,10 +428,7 @@ export default function AdminDashboard({
             try {
               const response = await fetch(`${baseUrl}/auth/users/${userId}`, {
                 method: "DELETE",
-                headers: {
-                  Authorization: `Bearer ${accessToken}`,
-                  "x-sdk-api-key": config?.apiKey || '',
-                },
+                headers: mandatoryHeaders,
               });
 
               if (!response.ok) {
@@ -475,10 +466,7 @@ export default function AdminDashboard({
                 `${baseUrl}/auth/tenants/${tenantId}`,
                 {
                   method: "DELETE",
-                  headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                    "x-sdk-api-key": config?.apiKey || '',
-                  },
+                  headers: mandatoryHeaders,
                 },
               );
 
