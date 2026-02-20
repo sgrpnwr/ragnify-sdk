@@ -4,8 +4,12 @@ import * as Yup from "yup";
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
 export const registerSchema = Yup.object({
-  firstName: Yup.string().required("First name is required"),
-  lastName: Yup.string().required("Last name is required"),
+ firstName: Yup.string()
+    .required("First name is required")
+    .min(2, "First name must be at least 2 characters long"),
+  lastName: Yup.string()
+    .required("Last name is required")
+    .min(2, "Last name must be at least 2 characters long"),
   email: Yup.string()
     .required("Email is required")
     .email("Email must be a valid email"),
