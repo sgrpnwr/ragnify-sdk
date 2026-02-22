@@ -63,7 +63,12 @@ export async function uploadPdfWeb({
     pollFileStatus(key);
   } catch (error: unknown) {
     let errorMsg = "Failed to upload file";
-    if (error && typeof error === "object" && "message" in error && typeof (error as any).message === "string") {
+    if (
+      error &&
+      typeof error === "object" &&
+      "message" in error &&
+      typeof (error as any).message === "string"
+    ) {
       errorMsg = (error as any).message;
     }
     showAlert("Error", errorMsg);
