@@ -71,12 +71,23 @@ export default function AdminDashboard({
   const [currentFileKey, setCurrentFileKey] = React.useState<string | null>(
     null,
   );
-  const mandatoryHeaders = {
-    "x-request-timestamp": Date.now().toString(),
-    "x-request-nonce": generateNonce(),
+  // Static headers
+  const staticHeaders = {
     Authorization: `Bearer ${accessToken}`,
     "x-sdk-api-key": config?.apiKey || "",
   };
+
+  // Dynamic replay headers
+  const getReplayHeaders = () => ({
+    "x-request-timestamp": Date.now().toString(),
+    "x-request-nonce": generateNonce(),
+  });
+
+  // Combine static and dynamic headers
+  const getHeaders = () => ({
+    ...staticHeaders,
+    ...getReplayHeaders(),
+  });
 
   // Users state
   const [users, setUsers] = React.useState<User[]>([]);
@@ -108,7 +119,7 @@ export default function AdminDashboard({
     try {
       setLoading(true);
       const response = await fetch(`${baseUrl}/auth/users`, {
-        headers: mandatoryHeaders,
+        headers: getHeaders(),
       });
 
       if (!response.ok) {
@@ -140,7 +151,7 @@ export default function AdminDashboard({
     try {
       setLoading(true);
       const response = await fetch(`${baseUrl}/auth/tenants`, {
-        headers: mandatoryHeaders,
+        headers: getHeaders(),
       });
 
       if (!response.ok) {
@@ -179,7 +190,7 @@ export default function AdminDashboard({
         const response = await fetch(
           `${baseUrl}/embedding/status/${encodedKey}`,
           {
-            headers: mandatoryHeaders,
+            headers: getHeaders(),
           },
         );
 
@@ -242,7 +253,7 @@ export default function AdminDashboard({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...mandatoryHeaders,
+          ...getHeaders(),
         },
         body: JSON.stringify({
           text: textInput,
@@ -302,7 +313,7 @@ export default function AdminDashboard({
         }),
         headers: {
           "Content-Type": "application/json",
-          ...mandatoryHeaders,
+          ...getHeaders(),
         },
       });
       if (!resp.ok) {
@@ -386,7 +397,7 @@ export default function AdminDashboard({
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          ...mandatoryHeaders,
+          ...getHeaders(),
         },
         body: JSON.stringify({ roles: newRoles }),
       });
@@ -418,7 +429,7 @@ export default function AdminDashboard({
             try {
               const response = await fetch(`${baseUrl}/auth/users/${userId}`, {
                 method: "DELETE",
-                headers: mandatoryHeaders,
+                headers: getHeaders(),
               });
 
               if (!response.ok) {
@@ -454,7 +465,7 @@ export default function AdminDashboard({
                 `${baseUrl}/auth/tenants/${tenantId}`,
                 {
                   method: "DELETE",
-                  headers: mandatoryHeaders,
+                  headers: getHeaders(),
                 },
               );
 
