@@ -54,7 +54,7 @@ export async function uploadPdfWeb({
     });
     setCurrentFileKey(key);
     setUploadStatus("File uploaded! Processing and generating embeddings...");
-    setUploadProgress(10);
+    setUploadProgress(0);
     setUploading(false);
     showAlert(
       "Upload Complete!",
