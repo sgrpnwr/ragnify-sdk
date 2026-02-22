@@ -3,7 +3,6 @@ import React from "react";
 import {
   ActivityIndicator,
   Alert,
-  Platform,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -11,9 +10,11 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Platform,
 } from "react-native";
 import { useSapientAuth } from "../context/AuthContext";
 import { generateNonce, handleErrors } from "../utils/general";
+import { uploadPdfWeb } from "../utils/webUpload";
 
 type Tab = "upload" | "tenants" | "users";
 
@@ -288,9 +289,20 @@ export default function AdminDashboard({
     }
   };
 
-  const handleUpload = async () => {
-    setUploading(true);
+  // Web file input ref
+  // Only define file input ref on web
+  // Only define file input ref on web
+  // @ts-ignore: DOM types only available on web
+  const fileInputRef = Platform.OS === "web" ? React.useRef(null) : null;
 
+  const handleUpload = async () => {
+    if (Platform.OS === "web") {
+      // @ts-ignore: DOM types only available on web
+      if (fileInputRef && fileInputRef.current) fileInputRef.current.click();
+      return;
+    }
+    // Native (mobile)
+    setUploading(true);
     try {
       const result = await DocumentPicker.getDocumentAsync({
         type: "application/pdf",
@@ -365,6 +377,26 @@ export default function AdminDashboard({
         }, 2000);
       }
     }
+  };
+
+  // Web: handle file input change
+  // @ts-ignore: DOM types only available on web
+  const handleWebFileChange = async (e) => {
+    // @ts-ignore: DOM types only available on web
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    await uploadPdfWeb({
+      file,
+      baseUrl,
+      getHeaders,
+      setCurrentFileKey,
+      setUploadStatus,
+      setUploadProgress,
+      setUploading,
+      showAlert,
+      pollFileStatus,
+      onNavigateToError,
+    });
   };
 
   const toggleUserRole = async (userId: string, currentRoles: string[]) => {
@@ -544,20 +576,32 @@ export default function AdminDashboard({
           </View>
 
           {inputType === "file" ? (
-            <TouchableOpacity
-              style={[
-                styles.uploadButton,
-                (uploading || !!currentFileKey) && styles.uploadButtonDisabled,
-              ]}
-              onPress={handleUpload}
-              disabled={uploading || !!currentFileKey}
-            >
-              {uploading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.uploadButtonText}>📄 Select PDF File</Text>
+            <>
+              {Platform.OS === "web" && (
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="application/pdf"
+                  style={{ display: "none" }}
+                  onChange={handleWebFileChange}
+                  disabled={uploading || !!currentFileKey}
+                />
               )}
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.uploadButton,
+                  (uploading || !!currentFileKey) && styles.uploadButtonDisabled,
+                ]}
+                onPress={handleUpload}
+                disabled={uploading || !!currentFileKey}
+              >
+                {uploading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={styles.uploadButtonText}>📄 Select PDF File</Text>
+                )}
+              </TouchableOpacity>
+            </>
           ) : (
             <View style={styles.textInputContainer}>
               <Text style={styles.inputLabel}>Title</Text>

@@ -1,5 +1,13 @@
 import React from "react";
-import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import ChatPanel from "../components/ChatPanel";
 import LogoutButton from "../components/LogoutButton";
 import { useSapientAuth } from "../context/AuthContext";
@@ -43,40 +51,46 @@ export default function ChatScreen({
 
   return (
     <SafeAreaView style={styles.containerRoot}>
-      <View style={styles.header}>
-        <LogoutButton onLogout={handleLogout} />
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 24}
+      >
+        <View style={styles.header}>
+          <LogoutButton onLogout={handleLogout} />
 
-        {/* Tenant Name in Top Center */}
-        {tenantName && (
-          <View style={styles.tenantBadge}>
-            <Text style={styles.tenantLabel}>{"Tenant->"}</Text>
-            <Text style={styles.tenantName}>{tenantName}</Text>
-          </View>
-        )}
+          {/* Tenant Name in Top Center */}
+          {tenantName && (
+            <View style={styles.tenantBadge}>
+              <Text style={styles.tenantLabel}>{"Tenant->"}</Text>
+              <Text style={styles.tenantName}>{tenantName}</Text>
+            </View>
+          )}
 
-        <View style={styles.headerSpacer} />
-        {isAdmin && (
-          <Pressable
-            style={styles.dashboardButton}
-            onPress={onNavigateToDashboard}
-            disabled={!onNavigateToDashboard}
-          >
-            <Text style={styles.dashboardButtonText}>⚙️</Text>
-          </Pressable>
-        )}
-      </View>
+          <View style={styles.headerSpacer} />
+          {isAdmin && (
+            <Pressable
+              style={styles.dashboardButton}
+              onPress={onNavigateToDashboard}
+              disabled={!onNavigateToDashboard}
+            >
+              <Text style={styles.dashboardButtonText}>⚙️</Text>
+            </Pressable>
+          )}
+        </View>
 
-      <View style={styles.content}>
-        <View style={styles.fullColumn}>
-          <View style={styles.rightBottom}>
-            <ChatPanel
-              accessToken={accessToken || ""}
-              baseUrl={config?.baseUrl || "http://localhost:8000"}
-              tenantId={user?.tenantId || ""}
-            />
+        <View style={styles.content}>
+          <View style={styles.fullColumn}>
+            <View style={styles.rightBottom}>
+              <ChatPanel
+                accessToken={accessToken || ""}
+                baseUrl={config?.baseUrl || "http://localhost:8000"}
+                tenantId={user?.tenantId || ""}
+              />
+            </View>
           </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
