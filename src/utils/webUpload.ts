@@ -1,6 +1,19 @@
 // utils/webUpload.ts
 // Handles PDF upload for web platform
 
+interface UploadPdfWebParams {
+  file: File;
+  baseUrl: string;
+  getHeaders: () => Record<string, string>;
+  setCurrentFileKey: (key: string) => void;
+  setUploadStatus: (status: string) => void;
+  setUploadProgress: (progress: number) => void;
+  setUploading: (uploading: boolean) => void;
+  showAlert: (title: string, message: string) => void;
+  pollFileStatus: (key: string) => void;
+  onNavigateToError?: () => void;
+}
+
 export async function uploadPdfWeb({
   file,
   baseUrl,
@@ -12,7 +25,7 @@ export async function uploadPdfWeb({
   showAlert,
   pollFileStatus,
   onNavigateToError,
-}) {
+}: UploadPdfWebParams): Promise<void> {
   setUploading(true);
   try {
     const fileName = file.name;
@@ -48,8 +61,11 @@ export async function uploadPdfWeb({
       `${file.name} uploaded successfully. Now processing and generating embeddings...`,
     );
     pollFileStatus(key);
-  } catch (error) {
-    const errorMsg = error?.message || "Failed to upload file";
+  } catch (error: unknown) {
+    let errorMsg = "Failed to upload file";
+    if (error && typeof error === "object" && "message" in error && typeof (error as any).message === "string") {
+      errorMsg = (error as any).message;
+    }
     showAlert("Error", errorMsg);
     setUploading(false);
     if (
