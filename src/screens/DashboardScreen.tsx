@@ -322,7 +322,7 @@ export default function AdminDashboard({
       const { uploadUrl, fileUrl, key } = await resp.json();
       void fileUrl;
       // Remove Authorization header for S3 pre-signed URL upload
-      const { Authorization, ...headersWithoutAuth } = mandatoryHeaders;
+      const { Authorization, ...headersWithoutAuth } = getHeaders();
       await fetch(uploadUrl, {
         method: "PUT",
         headers: {
