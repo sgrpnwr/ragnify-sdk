@@ -359,7 +359,7 @@ export default function AdminDashboard({
       // File uploaded - start polling for processing status
       setCurrentFileKey(key);
       setUploadStatus("File uploaded! Processing and generating embeddings...");
-      setUploadProgress(10);
+      setUploadProgress(0);
       setUploading(false);
 
       showAlert(
