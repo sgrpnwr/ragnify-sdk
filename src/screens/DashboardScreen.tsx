@@ -3,6 +3,8 @@ import React from "react";
 import {
   ActivityIndicator,
   Alert,
+  Animated,
+  Platform,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -10,7 +12,6 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Platform,
 } from "react-native";
 import { useSapientAuth } from "../context/AuthContext";
 import { generateNonce, handleErrors } from "../utils/general";
@@ -69,6 +70,15 @@ export default function AdminDashboard({
   const [textTitle, setTextTitle] = React.useState("");
   const [uploadStatus, setUploadStatus] = React.useState<string>("");
   const [uploadProgress, setUploadProgress] = React.useState<number>(0);
+  const progressAnim = React.useRef(new Animated.Value(0)).current;
+
+  React.useEffect(() => {
+    Animated.timing(progressAnim, {
+      toValue: uploadProgress,
+      duration: 400,
+      useNativeDriver: false,
+    }).start();
+  }, [uploadProgress]);
   const [currentFileKey, setCurrentFileKey] = React.useState<string | null>(
     null,
   );
@@ -202,8 +212,15 @@ export default function AdminDashboard({
           // Prefer chunk progress if available
           let displayProgress = progress;
           let chunkProgressText = "";
-          if (metadata && typeof metadata.processedChunks === "number" && typeof metadata.totalChunks === "number" && metadata.totalChunks > 0) {
-            displayProgress = Math.round((metadata.processedChunks / metadata.totalChunks) * 100);
+          if (
+            metadata &&
+            typeof metadata.processedChunks === "number" &&
+            typeof metadata.totalChunks === "number" &&
+            metadata.totalChunks > 0
+          ) {
+            displayProgress = Math.round(
+              (metadata.processedChunks / metadata.totalChunks) * 100,
+            );
             chunkProgressText = ` (${metadata.processedChunks}/${metadata.totalChunks} chunks)`;
           }
 
@@ -598,7 +615,8 @@ export default function AdminDashboard({
               <TouchableOpacity
                 style={[
                   styles.uploadButton,
-                  (uploading || !!currentFileKey) && styles.uploadButtonDisabled,
+                  (uploading || !!currentFileKey) &&
+                    styles.uploadButtonDisabled,
                 ]}
                 onPress={handleUpload}
                 disabled={uploading || !!currentFileKey}
@@ -606,7 +624,9 @@ export default function AdminDashboard({
                 {uploading ? (
                   <ActivityIndicator color="#fff" />
                 ) : (
-                  <Text style={styles.uploadButtonText}>📄 Select PDF File</Text>
+                  <Text style={styles.uploadButtonText}>
+                    📄 Select PDF File
+                  </Text>
                 )}
               </TouchableOpacity>
             </>
@@ -664,8 +684,16 @@ export default function AdminDashboard({
                 <Text style={styles.statusProgress}>{uploadProgress}%</Text>
               </View>
               <View style={styles.progressBar}>
-                <View
-                  style={[styles.progressFill, { width: `${uploadProgress}%` }]}
+                <Animated.View
+                  style={[
+                    styles.progressFill,
+                    {
+                      width: progressAnim.interpolate({
+                        inputRange: [0, 100],
+                        outputRange: ["0%", "100%"],
+                      }),
+                    },
+                  ]}
                 />
               </View>
               <Text style={styles.statusMessage}>{uploadStatus}</Text>
