@@ -9,7 +9,6 @@ export function generateNonce(length = 24) {
   return result;
 }
 export const handleErrors = async (response: Response) => {
-    console.log('response', response, response.status, await response.text());
         if(response.status === 401) {
           throw Error("Unauthorized. Please try again later.");
         }

@@ -77,7 +77,7 @@ export default function AdminDashboard({
     Authorization: `Bearer ${accessToken}`,
     "x-sdk-api-key": config?.apiKey || "",
   };
-  
+
   // Users state
   const [users, setUsers] = React.useState<User[]>([]);
 
@@ -149,7 +149,10 @@ export default function AdminDashboard({
       const data = await response.json();
       setTenants(data.tenants || data.data || []);
     } catch (error: any) {
-      Alert.alert("Error", error?.message || "Failed to load tenant information");
+      Alert.alert(
+        "Error",
+        error?.message || "Failed to load tenant information",
+      );
     } finally {
       setLoading(false);
     }
@@ -186,7 +189,6 @@ export default function AdminDashboard({
 
           setUploadStatus(message);
           setUploadProgress(progress);
-
 
           if (status === "embedding_completed") {
             showAlert(
@@ -240,7 +242,7 @@ export default function AdminDashboard({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-         ...mandatoryHeaders,
+          ...mandatoryHeaders,
         },
         body: JSON.stringify({
           text: textInput,
@@ -300,19 +302,21 @@ export default function AdminDashboard({
         }),
         headers: {
           "Content-Type": "application/json",
-         ...mandatoryHeaders
+          ...mandatoryHeaders,
         },
       });
       if (!resp.ok) {
-        await handleErrors(resp)
+        await handleErrors(resp);
       }
       const { uploadUrl, fileUrl, key } = await resp.json();
       void fileUrl;
+      // Remove Authorization header for S3 pre-signed URL upload
+      const { Authorization, ...headersWithoutAuth } = mandatoryHeaders;
       await fetch(uploadUrl, {
         method: "PUT",
         headers: {
           "Content-Type": `${file.mimeType}`,
-          ...mandatoryHeaders,
+          ...headersWithoutAuth,
         },
         body: {
           uri: file.uri,
@@ -388,7 +392,7 @@ export default function AdminDashboard({
       });
 
       if (!response.ok) {
-        await handleErrors(response)
+        await handleErrors(response);
       }
 
       Alert.alert("Success", "User role updated successfully");
