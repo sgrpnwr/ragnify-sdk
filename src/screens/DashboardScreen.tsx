@@ -197,10 +197,18 @@ export default function AdminDashboard({
 
         if (response.ok) {
           const data = await response.json();
-          const { status, progress, message } = data.data;
+          const { status, progress, message, metadata } = data.data;
 
-          setUploadStatus(message);
-          setUploadProgress(progress);
+          // Prefer chunk progress if available
+          let displayProgress = progress;
+          let chunkProgressText = "";
+          if (metadata && typeof metadata.processedChunks === "number" && typeof metadata.totalChunks === "number" && metadata.totalChunks > 0) {
+            displayProgress = Math.round((metadata.processedChunks / metadata.totalChunks) * 100);
+            chunkProgressText = ` (${metadata.processedChunks}/${metadata.totalChunks} chunks)`;
+          }
+
+          setUploadStatus(message + chunkProgressText);
+          setUploadProgress(displayProgress);
 
           if (status === "embedding_completed") {
             showAlert(
