@@ -140,7 +140,7 @@ export default function AdminDashboard({
       const data = await response.json();
       setUsers(data.users || []);
     } catch (error: any) {
-      Alert.alert("Error", error?.message || "Failed to load users");
+      showAlert("Error", error?.message || "Failed to load users");
     } finally {
       setLoading(false);
     }
@@ -171,10 +171,7 @@ export default function AdminDashboard({
       const data = await response.json();
       setTenants(data.tenants || data.data || []);
     } catch (error: any) {
-      Alert.alert(
-        "Error",
-        error?.message || "Failed to load tenant information",
-      );
+      showAlert("Error", error?.message || "Failed to load tenant information");
     } finally {
       setLoading(false);
     }
@@ -433,7 +430,7 @@ export default function AdminDashboard({
 
       // If user is super admin, don't allow demotion from regular tenant admin
       if (isSuperAdmin) {
-        Alert.alert("Error", "Cannot modify super admin from this interface");
+        showAlert("Error", "Cannot modify super admin from this interface");
         return;
       }
 
@@ -463,82 +460,125 @@ export default function AdminDashboard({
         await handleErrors(response);
       }
 
-      Alert.alert("Success", "User role updated successfully");
+      showAlert("Success", "User role updated successfully");
       fetchUsers();
     } catch (error: any) {
-      Alert.alert("Error", error.message || "Failed to update user role");
+      showAlert("Error", error.message || "Failed to update user role");
     }
   };
 
   const deleteUser = async (userId: string, userName: string) => {
-    Alert.alert(
-      "Delete User",
-      `Are you sure you want to delete ${userName}? This action cannot be undone.`,
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              const response = await fetch(`${baseUrl}/auth/users/${userId}`, {
-                method: "DELETE",
-                headers: getHeaders(),
-              });
-
-              if (!response.ok) {
-                await handleErrors(response);
-              }
-
-              Alert.alert("Success", "User deleted successfully");
-              fetchUsers();
-            } catch (error: any) {
-              Alert.alert("Error", error.message || "Failed to delete user");
-            }
+    if (Platform.OS === "web") {
+      if (
+        (globalThis as any).confirm(
+          `Are you sure you want to delete ${userName}? This action cannot be undone.`,
+        )
+      ) {
+        try {
+          const response = await fetch(`${baseUrl}/auth/users/${userId}`, {
+            method: "DELETE",
+            headers: getHeaders(),
+          });
+          if (!response.ok) {
+            await handleErrors(response);
+          }
+          showAlert("Success", "User deleted successfully");
+          fetchUsers();
+        } catch (error: any) {
+          showAlert("Error", error.message || "Failed to delete user");
+        }
+      }
+    } else {
+      Alert.alert(
+        "Delete User",
+        `Are you sure you want to delete ${userName}? This action cannot be undone.`,
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
           },
-        },
-      ],
-    );
+          {
+            text: "Delete",
+            style: "destructive",
+            onPress: async () => {
+              try {
+                const response = await fetch(
+                  `${baseUrl}/auth/users/${userId}`,
+                  {
+                    method: "DELETE",
+                    headers: getHeaders(),
+                  },
+                );
+                if (!response.ok) {
+                  await handleErrors(response);
+                }
+                showAlert("Success", "User deleted successfully");
+                fetchUsers();
+              } catch (error: any) {
+                showAlert("Error", error.message || "Failed to delete user");
+              }
+            },
+          },
+        ],
+      );
+    }
   };
 
   const deleteTenant = async (tenantId: string, tenantName: string) => {
-    Alert.alert(
-      "Delete Tenant",
-      `Are you sure you want to delete tenant "${tenantName}"? This will affect all users in this tenant. This action cannot be undone.`,
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              const response = await fetch(
-                `${baseUrl}/auth/tenants/${tenantId}`,
-                {
-                  method: "DELETE",
-                  headers: getHeaders(),
-                },
-              );
-
-              if (!response.ok) {
-                await handleErrors(response);
-              }
-
-              Alert.alert("Success", "Tenant deleted successfully");
-              fetchTenants();
-            } catch (error: any) {
-              Alert.alert("Error", error.message || "Failed to delete tenant");
-            }
+    if (Platform.OS === "web") {
+      if (
+        (globalThis as any).confirm(
+          `Are you sure you want to delete tenant \"${tenantName}\"? This will affect all users in this tenant. This action cannot be undone.`,
+        )
+      ) {
+        try {
+          const response = await fetch(`${baseUrl}/auth/tenants/${tenantId}`, {
+            method: "DELETE",
+            headers: getHeaders(),
+          });
+          if (!response.ok) {
+            await handleErrors(response);
+          }
+          showAlert("Success", "Tenant deleted successfully");
+          fetchTenants();
+        } catch (error: any) {
+          showAlert("Error", error.message || "Failed to delete tenant");
+        }
+      }
+    } else {
+      Alert.alert(
+        "Delete Tenant",
+        `Are you sure you want to delete tenant \"${tenantName}\"? This will affect all users in this tenant. This action cannot be undone.`,
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
           },
-        },
-      ],
-    );
+          {
+            text: "Delete",
+            style: "destructive",
+            onPress: async () => {
+              try {
+                const response = await fetch(
+                  `${baseUrl}/auth/tenants/${tenantId}`,
+                  {
+                    method: "DELETE",
+                    headers: getHeaders(),
+                  },
+                );
+                if (!response.ok) {
+                  await handleErrors(response);
+                }
+                showAlert("Success", "Tenant deleted successfully");
+                fetchTenants();
+              } catch (error: any) {
+                showAlert("Error", error.message || "Failed to delete tenant");
+              }
+            },
+          },
+        ],
+      );
+    }
   };
 
   const renderUploadTab = () => (

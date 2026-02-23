@@ -23,7 +23,16 @@ type Props = {
   onLoginLinkPress?: () => void;
   onNavigateToError?: () => void;
 };
-
+const showAlert = (title: string, message: string) => {
+    if (
+      Platform.OS === "web" &&
+      typeof (globalThis as any)?.alert === "function"
+    ) {
+      (globalThis as any).alert(`${title}: ${message}`);
+    } else {
+      Alert.alert(title, message);
+    }
+  };
 export default function RegisterScreen({
   onRegisterSuccess,
   onLoginLinkPress,
@@ -76,7 +85,7 @@ export default function RegisterScreen({
       });
 
       if (res.status === 201) {
-        Alert.alert("Success", "User registered successfully");
+        showAlert("Success", "User registered successfully");
         const data = await res.json().catch(() => ({}));
 
         // extract tokens if present
