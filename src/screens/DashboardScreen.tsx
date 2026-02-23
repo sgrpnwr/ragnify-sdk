@@ -372,7 +372,9 @@ export default function AdminDashboard({
 
       // File uploaded - start polling for processing status
       setCurrentFileKey(key);
+      
       setUploadStatus("File uploaded! Processing and generating embeddings...");
+      
       setUploadProgress(0);
       setUploading(false);
 
@@ -380,6 +382,15 @@ export default function AdminDashboard({
         "Upload Complete!",
         `${file.name} uploaded successfully. Now processing and generating embeddings...`,
       );
+      // Send upload-success event to file-service
+      await fetch(`${baseUrl}/file/upload-success`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...getHeaders(),
+        },
+        body: JSON.stringify({ key }),
+      });
 
       // Start polling for status
       pollFileStatus(key);
