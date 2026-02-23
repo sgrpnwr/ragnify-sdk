@@ -245,7 +245,7 @@ export default function AdminDashboard({
         // Continue polling if not completed
         attempts++;
         if (attempts < maxAttempts) {
-          setTimeout(poll, 5000); // Poll every 5 seconds
+          setTimeout(poll, 1500); // Poll every 5 seconds
         } else {
           setUploadStatus("Processing timeout - please check back later");
           setCurrentFileKey(null);
@@ -253,7 +253,7 @@ export default function AdminDashboard({
       } catch (error) {
         attempts++;
         if (attempts < maxAttempts) {
-          setTimeout(poll, 5000);
+          setTimeout(poll, 1500);
         }
       }
     };

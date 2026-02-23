@@ -60,6 +60,15 @@ export async function uploadPdfWeb({
       "Upload Complete!",
       `${file.name} uploaded successfully. Now processing and generating embeddings...`,
     );
+    // Send upload-success event to file-service
+      await fetch(`${baseUrl}/file/upload-success`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...getHeaders(),
+        },
+        body: JSON.stringify({ key }),
+      });
     pollFileStatus(key);
   } catch (error: unknown) {
     let errorMsg = "Failed to upload file";
