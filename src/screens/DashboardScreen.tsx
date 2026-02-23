@@ -319,8 +319,10 @@ export default function AdminDashboard({
 
   const handleUpload = async () => {
     if (Platform.OS === "web") {
+      setUploading(true);
       // @ts-ignore: DOM types only available on web
       if (fileInputRef && fileInputRef.current) fileInputRef.current.click();
+
       return;
     }
     // Native (mobile)
