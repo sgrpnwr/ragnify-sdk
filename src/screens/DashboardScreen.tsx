@@ -329,8 +329,8 @@ export default function AdminDashboard({
     setUploading(true);
     try {
       const result = await DocumentPicker.getDocumentAsync({
-        type: "application/pdf",
-        copyToCacheDirectory: true,
+      type: ["application/pdf", "image/*"],
+      copyToCacheDirectory: true,
       });
 
       if (result.canceled) {
@@ -338,9 +338,10 @@ export default function AdminDashboard({
         setUploading(false);
         return;
       }
-      const file = result.assets[0];
-      const fileName = file.name || "document.pdf";
-      const fileType = file.mimeType || "application/pdf";
+    const file = result.assets[0];
+    const fileName = file.name || "document.pdf";
+    const fileType = file.mimeType || "application/octet-stream";
+    const isImage = fileType.startsWith("image/");
       const resp = await fetch(`${baseUrl}/file/presigned-url`, {
         method: "POST",
         body: JSON.stringify({
@@ -359,6 +360,21 @@ export default function AdminDashboard({
       void fileUrl;
       // Remove Authorization header for S3 pre-signed URL upload
       const { Authorization, ...headersWithoutAuth } = getHeaders();
+      // 3. Conditional Body Construction
+    let uploadBody: any;
+
+    if (isImage) {
+      // Use Blob for images to prevent corrupted uploads
+      const blobResponse = await fetch(file.uri);
+      uploadBody = await blobResponse.blob();
+    } else {
+      // Keep your original logic for PDFs to avoid regression
+      uploadBody = {
+        uri: file.uri,
+        type: fileType,
+        name: fileName,
+      };
+    }
       await fetch(uploadUrl, {
         method: "PUT",
         headers: {
@@ -366,16 +382,17 @@ export default function AdminDashboard({
           ...headersWithoutAuth,
         },
         body: {
-          uri: file.uri,
-          type: file.mimeType || "application/pdf",
-          name: file.name,
+          ...uploadBody
         },
       });
 
       // File uploaded - start polling for processing status
       setCurrentFileKey(key);
-      
-      setUploadStatus("File uploaded! Processing and generating embeddings...");
+      setUploadStatus(
+      isImage 
+        ? "Image uploaded! Analyzing content..." 
+        : "File uploaded! Processing and generating embeddings..."
+    );
       
       setUploadProgress(0);
       setUploading(false);
@@ -391,7 +408,7 @@ export default function AdminDashboard({
           "Content-Type": "application/json",
           ...getHeaders(),
         },
-        body: JSON.stringify({ key }),
+        body: JSON.stringify({ key, type:fileType }),
       });
 
       // Start polling for status
