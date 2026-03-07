@@ -8,7 +8,7 @@ type Props = {
 function LogoutButton({ onLogout }: Props) {
   return (
     <Pressable onPress={onLogout} style={styles.button}>
-      <Text style={styles.text}>🚪 Logout</Text>
+      <Text style={styles.text}>Log out</Text>
     </Pressable>
   );
 }
@@ -17,16 +17,16 @@ export default React.memo(LogoutButton);
 
 const styles = StyleSheet.create({
   button: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    backgroundColor: "#252525",
-    borderRadius: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    backgroundColor: "#F4F4F4",
+    borderRadius: 6,
     borderWidth: 1,
-    borderColor: "#3a3a3a",
+    borderColor: "#E5E5E5",
   },
   text: {
-    color: "#2196f3",
-    fontSize: 15,
-    fontWeight: "600",
+    color: "#111111",
+    fontSize: 14,
+    fontWeight: "500",
   },
 });

@@ -1,12 +1,12 @@
 import React from "react";
 import {
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
+    KeyboardAvoidingView,
+    Platform,
+    Pressable,
+    SafeAreaView,
+    StyleSheet,
+    Text,
+    View,
 } from "react-native";
 import ChatPanel from "../components/ChatPanel";
 import LogoutButton from "../components/LogoutButton";
@@ -57,16 +57,18 @@ export default function ChatScreen({
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 24}
       >
         <View style={styles.header}>
+          {/* Left */}
           <LogoutButton onLogout={handleLogout} />
 
-          {/* Tenant Name in Top Center */}
+          {/* Center — absolutely positioned so it's always truly centered */}
           {tenantName && (
-            <View style={styles.tenantBadge}>
-              <Text style={styles.tenantLabel}>{"Tenant->"}</Text>
+            <View style={styles.tenantBadge} pointerEvents="none">
+              <Text style={styles.tenantLabel}>Workspace</Text>
               <Text style={styles.tenantName}>{tenantName}</Text>
             </View>
           )}
 
+          {/* Right */}
           <View style={styles.headerSpacer} />
           {isAdmin && (
             <Pressable
@@ -74,7 +76,7 @@ export default function ChatScreen({
               onPress={onNavigateToDashboard}
               disabled={!onNavigateToDashboard}
             >
-              <Text style={styles.dashboardButtonText}>⚙️</Text>
+              <Text style={styles.dashboardButtonText}>Dashboard</Text>
             </Pressable>
           )}
         </View>
@@ -84,7 +86,7 @@ export default function ChatScreen({
             <View style={styles.rightBottom}>
               <ChatPanel
                 accessToken={accessToken || ""}
-                baseUrl={config?.baseUrl || "http://localhost:8000"}
+                baseUrl={config?.baseUrl || "https://ragnifyms.sgrpnwr.com"}
                 tenantId={user?.tenantId || ""}
               />
             </View>
@@ -98,27 +100,28 @@ export default function ChatScreen({
 const styles = StyleSheet.create({
   containerRoot: {
     flex: 1,
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#FAFAFA",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#333",
-    backgroundColor: "#1a1a1a",
+    borderBottomColor: "#E5E5E5",
+    backgroundColor: "#FFFFFF",
+    position: "relative",
   },
   content: {
     flex: 1,
     flexDirection: "row",
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#FAFAFA",
   },
   leftColumn: {
     width: "30%",
     justifyContent: "center",
     alignItems: "center",
     borderRightWidth: 1,
-    borderRightColor: "#eee",
+    borderRightColor: "#E5E5E5",
   },
   rightColumn: {
     flex: 1,
@@ -135,56 +138,54 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontSize: 28,
-    fontWeight: "700",
+    fontSize: 22,
+    fontWeight: "600",
     marginBottom: 8,
-    color: "#fff",
+    color: "#111111",
   },
   subtitle: {
-    fontSize: 18,
-    color: "#999",
+    fontSize: 15,
+    color: "#888888",
   },
   headerSpacer: {
     flex: 1,
   },
   dashboardButton: {
-    backgroundColor: "#2196f3",
+    backgroundColor: "#F4F4F4",
     flexDirection: "row",
-    paddingHorizontal: 16,
-    height: 40,
+    paddingHorizontal: 14,
+    height: 36,
     borderRadius: 6,
     justifyContent: "center",
     alignItems: "center",
     gap: 6,
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
   },
   dashboardButtonText: {
-    fontSize: 14,
-    color: "#fff",
-    fontWeight: "600",
+    fontSize: 13,
+    color: "#111111",
+    fontWeight: "500",
   },
   tenantBadge: {
-    backgroundColor: "#252525",
-    borderRadius: 12,
-    padding: 8,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    borderColor: "#3a3a3a",
-    flexDirection: "row",
+    position: "absolute",
+    left: 0,
+    right: 0,
     alignItems: "center",
-    gap: 8,
-    marginLeft: 40,
+    justifyContent: "center",
+    flexDirection: "row",
+    gap: 6,
   },
   tenantLabel: {
     fontSize: 11,
-    color: "#999",
+    color: "#AAAAAA",
     textTransform: "uppercase",
-    letterSpacing: 1,
-    fontWeight: "600",
+    letterSpacing: 0.5,
+    fontWeight: "500",
   },
   tenantName: {
-    fontSize: 14,
-    color: "#2196f3",
-    fontWeight: "700",
-    letterSpacing: 0.5,
+    fontSize: 13,
+    color: "#111111",
+    fontWeight: "600",
   },
 });

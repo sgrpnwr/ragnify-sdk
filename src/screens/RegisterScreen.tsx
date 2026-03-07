@@ -1,22 +1,22 @@
 import React from "react";
 import {
-  ActivityIndicator,
-  Alert,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
+    ActivityIndicator,
+    Alert,
+    Image,
+    KeyboardAvoidingView,
+    Platform,
+    Pressable,
+    SafeAreaView,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
 } from "react-native";
 import { useSapientAuth } from "../context/AuthContext";
 import { extractUserFromResponse } from "../utils/auth";
-import { registerSchema } from "../validators/auth";
 import { generateNonce, handleErrors } from "../utils/general";
+import { registerSchema } from "../validators/auth";
 
 type Props = {
   onRegisterSuccess?: (user: any) => void;
@@ -24,15 +24,15 @@ type Props = {
   onNavigateToError?: () => void;
 };
 const showAlert = (title: string, message: string) => {
-    if (
-      Platform.OS === "web" &&
-      typeof (globalThis as any)?.alert === "function"
-    ) {
-      (globalThis as any).alert(`${title}: ${message}`);
-    } else {
-      Alert.alert(title, message);
-    }
-  };
+  if (
+    Platform.OS === "web" &&
+    typeof (globalThis as any)?.alert === "function"
+  ) {
+    (globalThis as any).alert(`${title}: ${message}`);
+  } else {
+    Alert.alert(title, message);
+  }
+};
 export default function RegisterScreen({
   onRegisterSuccess,
   onLoginLinkPress,
@@ -72,7 +72,7 @@ export default function RegisterScreen({
     }
 
     try {
-      const baseUrl = config?.baseUrl || "http://localhost:8000";
+      const baseUrl = config?.baseUrl || "https://ragnifyms.sgrpnwr.com";
       const res = await fetch(`${baseUrl}/auth/register`, {
         method: "POST",
         headers: {
@@ -156,7 +156,7 @@ export default function RegisterScreen({
 
             <TextInput
               placeholder="First name"
-              placeholderTextColor="#666"
+              placeholderTextColor="#AAAAAA"
               value={firstName}
               onChangeText={setFirstName}
               style={[
@@ -171,7 +171,7 @@ export default function RegisterScreen({
 
             <TextInput
               placeholder="Last name"
-              placeholderTextColor="#666"
+              placeholderTextColor="#AAAAAA"
               value={lastName}
               onChangeText={setLastName}
               style={[
@@ -186,7 +186,7 @@ export default function RegisterScreen({
 
             <TextInput
               placeholder="Email"
-              placeholderTextColor="#666"
+              placeholderTextColor="#AAAAAA"
               value={email}
               onChangeText={setEmail}
               style={[
@@ -202,7 +202,7 @@ export default function RegisterScreen({
 
             <TextInput
               placeholder="Password"
-              placeholderTextColor="#666"
+              placeholderTextColor="#AAAAAA"
               value={password}
               onChangeText={setPassword}
               style={[
@@ -217,7 +217,7 @@ export default function RegisterScreen({
 
             <TextInput
               placeholder="Confirm Password"
-              placeholderTextColor="#666"
+              placeholderTextColor="#AAAAAA"
               value={confirmPassword}
               onChangeText={setConfirmPassword}
               style={[
@@ -274,7 +274,7 @@ export default function RegisterScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#FAFAFA",
     padding: 16,
   },
   keyboardAvoiding: {
@@ -290,104 +290,105 @@ const styles = StyleSheet.create({
     marginBottom: 48,
   },
   brandingText: {
-    fontSize: 48,
-    fontWeight: "800",
+    fontSize: 40,
+    fontWeight: "700",
     color: "#2196f3",
-    letterSpacing: 2,
+    letterSpacing: 0,
     textAlign: "center",
-    marginBottom: 8,
+    marginBottom: 6,
   },
   brandingTagline: {
     fontSize: 14,
-    color: "#999",
-    letterSpacing: 1,
+    color: "#888888",
+    letterSpacing: 0,
     textAlign: "center",
-    fontWeight: "300",
+    fontWeight: "400",
   },
   form: {
     gap: 14,
     paddingHorizontal: 24,
   },
   title: {
-    fontSize: 32,
-    fontWeight: "700",
-    color: "#fff",
+    fontSize: 26,
+    fontWeight: "600",
+    color: "#111111",
     textAlign: "center",
-    marginBottom: 4,
+    marginBottom: 2,
   },
   subtitle: {
-    fontSize: 16,
-    color: "#999",
+    fontSize: 14,
+    color: "#888888",
     textAlign: "center",
-    marginBottom: 12,
+    marginBottom: 8,
   },
   input: {
     height: 50,
-    borderColor: "#3a3a3a",
+    borderColor: "#E5E5E5",
     borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    backgroundColor: "#252525",
-    color: "#fff",
+    borderRadius: 6,
+    paddingHorizontal: 14,
+    backgroundColor: "#FFFFFF",
+    color: "#111111",
     fontSize: 15,
   },
   inputError: {
-    borderColor: "#ff6b6b",
+    borderColor: "#D93025",
   },
   errorContainer: {
-    backgroundColor: "#2a1a1a",
-    borderRadius: 8,
+    backgroundColor: "#FFF5F5",
+    borderRadius: 6,
     padding: 12,
     borderWidth: 1,
-    borderColor: "#ff6b6b",
+    borderColor: "#FECACA",
   },
   errorText: {
-    color: "#ff6b6b",
+    color: "#D93025",
     textAlign: "center",
     fontSize: 14,
   },
   fieldError: {
-    color: "#ff6b6b",
+    color: "#D93025",
     fontSize: 13,
     marginTop: -8,
   },
   button: {
-    backgroundColor: "#2196f3",
+    backgroundColor: "#111111",
     paddingVertical: 14,
-    borderRadius: 24,
+    borderRadius: 6,
     alignItems: "center",
     marginTop: 8,
     height: 50,
     justifyContent: "center",
   },
   buttonDisabled: {
-    opacity: 0.6,
+    opacity: 0.5,
   },
   buttonText: {
-    color: "#fff",
-    fontSize: 16,
+    color: "#FFFFFF",
+    fontSize: 15,
     fontWeight: "600",
+    letterSpacing: 0.3,
   },
   switchLink: {
     marginTop: 8,
     textAlign: "center",
-    color: "#999",
-    fontSize: 15,
+    color: "#888888",
+    fontSize: 14,
   },
   switchLinkBold: {
-    color: "#2196f3",
+    color: "#111111",
     fontWeight: "600",
   },
   footer: {
-    marginTop: 32,
+    marginTop: 40,
     alignItems: "center",
-    gap: 12,
+    gap: 10,
   },
   logoContainer: {
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#F4F4F4",
     paddingHorizontal: 20,
     paddingVertical: 12,
-    borderRadius: 8,
+    borderRadius: 6,
   },
   footerLogo: {
     width: 120,
@@ -395,7 +396,7 @@ const styles = StyleSheet.create({
   },
   creditText: {
     fontSize: 12,
-    color: "#666",
+    color: "#BBBBBB",
     fontWeight: "400",
   },
 });

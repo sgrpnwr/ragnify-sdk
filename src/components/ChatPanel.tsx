@@ -27,7 +27,7 @@ type Message = {
 };
 
 export default function ChatPanel({
-  baseUrl = "http://localhost:8000",
+  baseUrl = "https://ragnifyms.sgrpnwr.com",
   accessToken,
   tenantId = "",
   onNavigateToError,
@@ -295,21 +295,31 @@ export default function ChatPanel({
         <TextInput
           style={styles.input}
           placeholder="Type your message..."
-          placeholderTextColor="#666"
+          placeholderTextColor="#AAAAAA"
           value={query}
           onChangeText={setQuery}
           editable={!loading}
           onSubmitEditing={sendQuery}
         />
         <Pressable
-          style={[styles.sendButton, loading && styles.sendButtonDisabled]}
+          style={[
+            styles.sendButton,
+            (loading || !query.trim()) && styles.sendButtonDisabled,
+          ]}
           onPress={sendQuery}
           disabled={loading || !query.trim()}
         >
           {loading ? (
             <ActivityIndicator size="small" color="#fff" />
           ) : (
-            <Text style={styles.sendButtonText}>Send</Text>
+            <Text
+              style={[
+                styles.sendButtonText,
+                !query.trim() && styles.sendButtonTextDisabled,
+              ]}
+            >
+              ↑
+            </Text>
           )}
         </Pressable>
       </View>
@@ -320,32 +330,32 @@ export default function ChatPanel({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#FAFAFA",
     padding: 16,
   },
   welcomeBox: {
-    backgroundColor: "#252525",
-    borderRadius: 12,
-    padding: 24,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 8,
+    padding: 20,
     marginBottom: 16,
     alignItems: "flex-start",
     borderWidth: 1,
-    borderColor: "#333",
+    borderColor: "#E5E5E5",
   },
   welcomeTitle: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: "#fff",
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#111111",
     marginBottom: 4,
   },
   welcomeSubtitle: {
-    fontSize: 16,
-    color: "#999",
+    fontSize: 14,
+    color: "#888888",
     marginBottom: 12,
   },
   welcomeText: {
-    fontSize: 18,
-    color: "#ccc",
+    fontSize: 15,
+    color: "#555555",
   },
   messagesContainer: {
     flex: 1,
@@ -356,7 +366,7 @@ const styles = StyleSheet.create({
   },
   messageRow: {
     flexDirection: "row",
-    marginVertical: 6,
+    marginVertical: 5,
     paddingHorizontal: 4,
   },
   rowLeft: {
@@ -366,41 +376,39 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   questionBubble: {
-    backgroundColor: "#2a2a2a",
-    borderColor: "#3a3a3a",
-    borderWidth: 1,
+    backgroundColor: "#111111",
     padding: 12,
-    borderRadius: 16,
+    borderRadius: 12,
     maxWidth: "75%",
-    borderBottomRightRadius: 4,
+    borderBottomRightRadius: 3,
   },
   answerBubble: {
-    backgroundColor: "#1e3a2e",
-    borderColor: "#2d5a45",
+    backgroundColor: "#FFFFFF",
+    borderColor: "#E5E5E5",
     borderWidth: 1,
     padding: 12,
-    borderRadius: 16,
+    borderRadius: 12,
     maxWidth: "75%",
-    borderBottomLeftRadius: 4,
+    borderBottomLeftRadius: 3,
   },
   questionText: {
-    color: "#fff",
+    color: "#FFFFFF",
     fontSize: 15,
-    lineHeight: 20,
+    lineHeight: 21,
   },
   answerText: {
-    color: "#d4f4dd",
+    color: "#111111",
     fontSize: 15,
-    lineHeight: 20,
+    lineHeight: 21,
   },
   streamingIndicator: {
-    color: "#a0d8b3",
-    fontSize: 18,
+    color: "#AAAAAA",
+    fontSize: 16,
     marginTop: 4,
-    opacity: 0.7,
+    letterSpacing: 2,
   },
   error: {
-    color: "#ff6b6b",
+    color: "#D93025",
     marginBottom: 8,
     fontSize: 14,
   },
@@ -408,33 +416,41 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
+    backgroundColor: "#FFFFFF",
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
   },
   input: {
     flex: 1,
-    height: 48,
-    borderWidth: 1,
-    borderColor: "#3a3a3a",
-    borderRadius: 24,
-    paddingHorizontal: 16,
-    backgroundColor: "#252525",
-    color: "#fff",
+    height: 44,
+    color: "#111111",
     fontSize: 15,
+    borderWidth: 0,
+    backgroundColor: "transparent",
   },
   sendButton: {
-    backgroundColor: "#2196f3",
-    paddingHorizontal: 24,
-    height: 48,
-    borderRadius: 24,
+    backgroundColor: "#111111",
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     justifyContent: "center",
     alignItems: "center",
-    minWidth: 80,
   },
   sendButtonDisabled: {
-    opacity: 0.6,
+    opacity: 0.3,
+    backgroundColor: "#DDDDDD",
+    borderWidth: 1,
+    borderColor: "#111111",
   },
   sendButtonText: {
-    color: "#fff",
-    fontSize: 15,
-    fontWeight: "600",
+    color: "#FFFFFF",
+    fontSize: 20,
+    fontWeight: "700",
+  },
+  sendButtonTextDisabled: {
+    color: "#444444",
   },
 });

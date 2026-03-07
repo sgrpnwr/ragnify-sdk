@@ -1,17 +1,17 @@
 import * as DocumentPicker from "expo-document-picker";
 import React from "react";
 import {
-  ActivityIndicator,
-  Alert,
-  Animated,
-  Platform,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Alert,
+    Animated,
+    Platform,
+    RefreshControl,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { useSapientAuth } from "../context/AuthContext";
 import { generateNonce, handleErrors } from "../utils/general";
@@ -55,7 +55,7 @@ export default function AdminDashboard({
   onNavigateToError,
 }: Props) {
   const { user, accessToken, logout, config } = useSapientAuth();
-  const baseUrl = config?.baseUrl || "http://localhost:8000";
+  const baseUrl = config?.baseUrl || "https://ragnifyms.sgrpnwr.com";
 
   // Check if user is super admin
   const isSuperAdmin = user?.roles?.includes("super_admin") || false;
@@ -374,9 +374,9 @@ export default function AdminDashboard({
 
       // File uploaded - start polling for processing status
       setCurrentFileKey(key);
-      
+
       setUploadStatus("File uploaded! Processing and generating embeddings...");
-      
+
       setUploadProgress(0);
       setUploading(false);
 
@@ -766,7 +766,7 @@ export default function AdminDashboard({
               <TextInput
                 style={styles.textInput}
                 placeholder="Enter text content"
-                placeholderTextColor="#666"
+                placeholderTextColor="#AAAAAA"
                 value={textInput}
                 onChangeText={setTextInput}
                 multiline
@@ -774,7 +774,7 @@ export default function AdminDashboard({
               <TextInput
                 style={styles.textInput}
                 placeholder="Enter title"
-                placeholderTextColor="#666"
+                placeholderTextColor="#AAAAAA"
                 value={textTitle}
                 onChangeText={setTextTitle}
                 multiline
@@ -861,7 +861,7 @@ export default function AdminDashboard({
                 style={styles.deleteButton}
                 onPress={() => deleteTenant(tenant.tenantId, tenant.name)}
               >
-                <Text style={styles.deleteButtonText}>🗑️ Delete Tenant</Text>
+                <Text style={styles.deleteButtonText}>Delete Tenant</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -943,7 +943,7 @@ export default function AdminDashboard({
                 }
                 disabled={u.roles.includes("super_admin")}
               >
-                <Text style={styles.deleteUserButtonText}>🗑️</Text>
+                <Text style={styles.deleteUserButtonText}>✕</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -964,7 +964,7 @@ export default function AdminDashboard({
       <View style={styles.header}>
         {isSuperAdmin ? (
           <TouchableOpacity style={styles.backButton} onPress={handleLogout}>
-            <Text style={styles.backButtonText}>🚪 Logout</Text>
+            <Text style={styles.backButtonText}>Log out</Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -1049,7 +1049,7 @@ export default function AdminDashboard({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#FAFAFA",
   },
   header: {
     flexDirection: "row",
@@ -1058,24 +1058,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 60,
     paddingBottom: 16,
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#FFFFFF",
     borderBottomWidth: 1,
-    borderBottomColor: "#333",
+    borderBottomColor: "#E5E5E5",
   },
   backButton: {
-    padding: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    backgroundColor: "#F4F4F4",
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
   },
   backButtonText: {
-    color: "#2196f3",
-    fontSize: 16,
+    color: "#111111",
+    fontSize: 15,
+    fontWeight: "500",
   },
   headerCenter: {
     alignItems: "center",
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#fff",
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#111111",
     marginBottom: 4,
   },
   adminBadgeHeader: {
@@ -1083,15 +1089,15 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     paddingHorizontal: 10,
     paddingVertical: 3,
-    borderRadius: 10,
+    borderRadius: 4,
     overflow: "hidden",
   },
   superAdminBadgeHeader: {
-    backgroundColor: "#9c27b0",
+    backgroundColor: "#7C3AED",
     color: "#fff",
   },
   tenantAdminBadgeHeader: {
-    backgroundColor: "#2196f3",
+    backgroundColor: "#111111",
     color: "#fff",
   },
   placeholder: {
@@ -1099,63 +1105,63 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     flexDirection: "row",
-    backgroundColor: "#252525",
+    backgroundColor: "#FFFFFF",
     borderBottomWidth: 1,
-    borderBottomColor: "#333",
+    borderBottomColor: "#E5E5E5",
   },
   tab: {
     flex: 1,
-    paddingVertical: 16,
+    paddingVertical: 14,
     alignItems: "center",
     borderBottomWidth: 2,
     borderBottomColor: "transparent",
   },
   tabActive: {
-    borderBottomColor: "#2196f3",
+    borderBottomColor: "#111111",
   },
   tabText: {
-    fontSize: 16,
-    color: "#888",
+    fontSize: 15,
+    color: "#AAAAAA",
     fontWeight: "500",
   },
   tabTextActive: {
-    color: "#2196f3",
-    fontWeight: "700",
+    color: "#111111",
+    fontWeight: "600",
   },
   tabContent: {
     flex: 1,
     padding: 20,
   },
   sectionTitle: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: "#fff",
-    marginBottom: 8,
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#111111",
+    marginBottom: 6,
   },
   sectionDescription: {
     fontSize: 14,
-    color: "#888",
+    color: "#888888",
     marginBottom: 24,
     lineHeight: 20,
   },
   uploadButton: {
-    backgroundColor: "#2196f3",
-    paddingVertical: 16,
+    backgroundColor: "#111111",
+    paddingVertical: 14,
     paddingHorizontal: 24,
-    borderRadius: 8,
+    borderRadius: 6,
     alignItems: "center",
     marginTop: 16,
   },
   uploadButtonDisabled: {
-    backgroundColor: "#555",
+    backgroundColor: "#CCCCCC",
   },
   uploadButtonText: {
-    color: "#fff",
-    fontSize: 16,
+    color: "#FFFFFF",
+    fontSize: 15,
     fontWeight: "600",
   },
   uploadingText: {
-    color: "#888",
+    color: "#888888",
     fontSize: 14,
     textAlign: "center",
     marginTop: 12,
@@ -1164,44 +1170,44 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   card: {
-    backgroundColor: "#252525",
+    backgroundColor: "#FFFFFF",
     borderRadius: 8,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#333",
+    borderColor: "#E5E5E5",
   },
   cardRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#333",
+    borderBottomColor: "#F0F0F0",
   },
   cardLabel: {
     fontSize: 14,
-    color: "#888",
+    color: "#888888",
     fontWeight: "500",
   },
   cardValue: {
     fontSize: 14,
-    color: "#fff",
+    color: "#111111",
     fontWeight: "600",
     flex: 1,
     textAlign: "right",
   },
   cardValueSecret: {
     fontSize: 14,
-    color: "#2196f3",
+    color: "#555555",
     fontWeight: "600",
     fontFamily: "monospace",
   },
   userCard: {
-    backgroundColor: "#252525",
+    backgroundColor: "#FFFFFF",
     borderRadius: 8,
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: "#333",
+    borderColor: "#E5E5E5",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -1210,19 +1216,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   userName: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#fff",
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#111111",
     marginBottom: 4,
   },
   userEmail: {
-    fontSize: 14,
-    color: "#888",
+    fontSize: 13,
+    color: "#888888",
     marginBottom: 8,
   },
   userTenant: {
     fontSize: 12,
-    color: "#666",
+    color: "#AAAAAA",
     marginBottom: 6,
     fontStyle: "italic",
   },
@@ -1232,7 +1238,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   adminBadge: {
-    backgroundColor: "#2196f3",
+    backgroundColor: "#111111",
     color: "#fff",
     fontSize: 10,
     fontWeight: "700",
@@ -1242,7 +1248,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   superAdminBadge: {
-    backgroundColor: "#9c27b0",
+    backgroundColor: "#7C3AED",
     color: "#fff",
     fontSize: 10,
     fontWeight: "700",
@@ -1252,8 +1258,8 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   roleBadge: {
-    backgroundColor: "#444",
-    color: "#fff",
+    backgroundColor: "#F4F4F4",
+    color: "#555555",
     fontSize: 10,
     fontWeight: "600",
     paddingHorizontal: 8,
@@ -1262,17 +1268,17 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   roleButton: {
-    backgroundColor: "#2196f3",
+    backgroundColor: "#111111",
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 6,
     marginLeft: 12,
   },
   roleButtonRemove: {
-    backgroundColor: "#f44336",
+    backgroundColor: "#D93025",
   },
   roleButtonDisabled: {
-    backgroundColor: "#666",
+    backgroundColor: "#CCCCCC",
     opacity: 0.5,
   },
   roleButtonText: {
@@ -1281,47 +1287,49 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   emptyText: {
-    color: "#888",
+    color: "#AAAAAA",
     fontSize: 14,
     textAlign: "center",
     marginTop: 40,
   },
   superAdminNotice: {
-    backgroundColor: "#2d2416",
-    borderRadius: 12,
+    backgroundColor: "#FFFBEB",
+    borderRadius: 8,
     padding: 24,
     marginTop: 20,
-    borderWidth: 2,
-    borderColor: "#9c6d1f",
+    borderWidth: 1,
+    borderColor: "#FDE68A",
     alignItems: "center",
   },
   superAdminNoticeIcon: {
-    fontSize: 48,
-    marginBottom: 16,
+    fontSize: 40,
+    marginBottom: 14,
   },
   superAdminNoticeTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#ffb74d",
-    marginBottom: 12,
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#92400E",
+    marginBottom: 10,
     textAlign: "center",
   },
   superAdminNoticeText: {
     fontSize: 14,
-    color: "#ddd",
+    color: "#78350F",
     lineHeight: 22,
     textAlign: "center",
   },
   deleteButton: {
-    backgroundColor: "#9f4343ff",
+    backgroundColor: "#FEE2E2",
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 6,
     marginTop: 16,
     alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#FECACA",
   },
   deleteButtonText: {
-    color: "#ffb3b3",
+    color: "#D93025",
     fontSize: 14,
     fontWeight: "600",
   },
@@ -1331,24 +1339,28 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   deleteUserButton: {
-    backgroundColor: "#8b3a3a",
+    backgroundColor: "#F4F4F4",
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 6,
     minWidth: 40,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
   },
   deleteUserButtonText: {
-    fontSize: 18,
+    fontSize: 14,
+    color: "#111111",
+    fontWeight: "500",
   },
   statusCard: {
-    backgroundColor: "#252525",
-    borderRadius: 12,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 8,
     padding: 16,
     marginTop: 16,
     borderWidth: 1,
-    borderColor: "#3a3a3a",
+    borderColor: "#E5E5E5",
   },
   statusHeader: {
     flexDirection: "row",
@@ -1357,29 +1369,29 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   statusTitle: {
-    color: "#fff",
-    fontSize: 16,
+    color: "#111111",
+    fontSize: 15,
     fontWeight: "600",
   },
   statusProgress: {
-    color: "#2196f3",
-    fontSize: 16,
-    fontWeight: "bold",
+    color: "#111111",
+    fontSize: 15,
+    fontWeight: "700",
   },
   progressBar: {
-    height: 8,
-    backgroundColor: "#3a3a3a",
-    borderRadius: 4,
+    height: 6,
+    backgroundColor: "#F0F0F0",
+    borderRadius: 3,
     overflow: "hidden",
     marginBottom: 12,
   },
   progressFill: {
     height: "100%",
-    backgroundColor: "#2196f3",
-    borderRadius: 4,
+    backgroundColor: "#111111",
+    borderRadius: 3,
   },
   statusMessage: {
-    color: "#999",
+    color: "#888888",
     fontSize: 14,
     textAlign: "center",
   },
@@ -1389,61 +1401,64 @@ const styles = StyleSheet.create({
   textInputContainer: {
     marginTop: 24,
     borderTopWidth: 1,
-    borderTopColor: "#333",
+    borderTopColor: "#F0F0F0",
     paddingTop: 16,
   },
   textInput: {
-    backgroundColor: "#1e1e1e",
-    color: "#fff",
+    backgroundColor: "#FFFFFF",
+    color: "#111111",
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 6,
     borderWidth: 1,
-    borderColor: "#333",
+    borderColor: "#E5E5E5",
     marginBottom: 12,
     minHeight: 60,
     textAlignVertical: "top",
   },
   submitButton: {
-    backgroundColor: "#4caf50",
+    backgroundColor: "#111111",
     paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 8,
+    borderRadius: 6,
     alignItems: "center",
   },
   submitButtonText: {
-    color: "#fff",
-    fontSize: 16,
+    color: "#FFFFFF",
+    fontSize: 15,
     fontWeight: "600",
   },
   inputTypeToggle: {
     flexDirection: "row",
     marginBottom: 20,
-    backgroundColor: "#252525",
-    borderRadius: 8,
+    backgroundColor: "#F4F4F4",
+    borderRadius: 6,
     padding: 4,
   },
   toggleButton: {
     flex: 1,
     paddingVertical: 10,
     alignItems: "center",
-    borderRadius: 6,
+    borderRadius: 4,
   },
   toggleButtonActive: {
-    backgroundColor: "#3a3a3a",
+    backgroundColor: "#FFFFFF",
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
   },
   toggleButtonText: {
-    color: "#888",
+    color: "#AAAAAA",
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
   },
   toggleButtonTextActive: {
-    color: "#fff",
+    color: "#111111",
+    fontWeight: "600",
   },
   inputLabel: {
-    color: "#ddd",
+    color: "#555555",
     fontSize: 14,
-    marginBottom: 8,
-    fontWeight: "600",
+    marginBottom: 6,
+    fontWeight: "500",
   },
   textArea: {
     minHeight: 120,
