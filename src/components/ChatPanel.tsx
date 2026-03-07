@@ -37,6 +37,7 @@ export default function ChatPanel({
     config: { apiKey },
   } = useSapientAuth();
   const [query, setQuery] = React.useState("");
+  const [inputFocus, setInputFocus] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [messages, setMessages] = React.useState<Message[]>([]);
   const [error, setError] = React.useState<string | null>(null);
@@ -293,13 +294,15 @@ export default function ChatPanel({
       {/* Input Area */}
       <View style={styles.inputRow}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, inputFocus && styles.inputFocus]}
           placeholder="Type your message..."
           placeholderTextColor="#AAAAAA"
           value={query}
           onChangeText={setQuery}
           editable={!loading}
           onSubmitEditing={sendQuery}
+          onFocus={() => setInputFocus(true)}
+          onBlur={() => setInputFocus(false)}
         />
         <Pressable
           style={[
@@ -430,6 +433,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     borderWidth: 0,
     backgroundColor: "transparent",
+  },
+  inputFocus: {
+    borderColor: "#2196f3",
+    borderWidth: 2,
   },
   sendButton: {
     backgroundColor: "#111111",

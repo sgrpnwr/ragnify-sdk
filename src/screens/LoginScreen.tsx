@@ -30,7 +30,9 @@ export default function LoginScreen({
 }: Props) {
   const { setUser, setTokens, config, organisationMetadata } = useSapientAuth();
   const [email, setEmail] = React.useState("");
+  const [emailFocus, setEmailFocus] = React.useState(false);
   const [password, setPassword] = React.useState("");
+  const [passwordFocus, setPasswordFocus] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [errors, setErrors] = React.useState<Record<string, string>>({});
 
@@ -153,8 +155,11 @@ export default function LoginScreen({
               placeholderTextColor="#AAAAAA"
               value={email}
               onChangeText={setEmail}
+              onFocus={() => setEmailFocus(true)}
+              onBlur={() => setEmailFocus(false)}
               style={[
                 styles.input,
+                emailFocus && styles.inputFocus,
                 errors.email ? styles.inputError : undefined,
               ]}
               keyboardType="email-address"
@@ -169,8 +174,11 @@ export default function LoginScreen({
               placeholderTextColor="#AAAAAA"
               value={password}
               onChangeText={setPassword}
+              onFocus={() => setPasswordFocus(true)}
+              onBlur={() => setPasswordFocus(false)}
               style={[
                 styles.input,
+                passwordFocus && styles.inputFocus,
                 errors.password ? styles.inputError : undefined,
               ]}
               secureTextEntry
@@ -210,9 +218,6 @@ export default function LoginScreen({
                 />
               </View>
             ) : null}
-            <Text style={styles.creditText}>
-              Made by {organisationMetadata.madeBy}
-            </Text>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -273,6 +278,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     color: "#111111",
     fontSize: 15,
+  },
+  inputFocus: {
+    borderColor: "#2196f3",
+    borderWidth: 2,
   },
   inputError: {
     borderColor: "#D93025",

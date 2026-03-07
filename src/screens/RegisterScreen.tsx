@@ -38,6 +38,11 @@ export default function RegisterScreen({
   onLoginLinkPress,
   onNavigateToError,
 }: Props) {
+  const [firstNameFocus, setFirstNameFocus] = React.useState(false);
+  const [lastNameFocus, setLastNameFocus] = React.useState(false);
+  const [emailFocus, setEmailFocus] = React.useState(false);
+  const [passwordFocus, setPasswordFocus] = React.useState(false);
+  const [confirmPasswordFocus, setConfirmPasswordFocus] = React.useState(false);
   const { setUser, setTokens, config, organisationMetadata } = useSapientAuth();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -159,8 +164,11 @@ export default function RegisterScreen({
               placeholderTextColor="#AAAAAA"
               value={firstName}
               onChangeText={setFirstName}
+              onFocus={() => setFirstNameFocus(true)}
+              onBlur={() => setFirstNameFocus(false)}
               style={[
                 styles.input,
+                firstNameFocus && styles.inputFocus,
                 errors.firstName ? styles.inputError : undefined,
               ]}
               autoCapitalize="words"
@@ -174,8 +182,11 @@ export default function RegisterScreen({
               placeholderTextColor="#AAAAAA"
               value={lastName}
               onChangeText={setLastName}
+              onFocus={() => setLastNameFocus(true)}
+              onBlur={() => setLastNameFocus(false)}
               style={[
                 styles.input,
+                lastNameFocus && styles.inputFocus,
                 errors.lastName ? styles.inputError : undefined,
               ]}
               autoCapitalize="words"
@@ -189,8 +200,11 @@ export default function RegisterScreen({
               placeholderTextColor="#AAAAAA"
               value={email}
               onChangeText={setEmail}
+              onFocus={() => setEmailFocus(true)}
+              onBlur={() => setEmailFocus(false)}
               style={[
                 styles.input,
+                emailFocus && styles.inputFocus,
                 errors.email ? styles.inputError : undefined,
               ]}
               keyboardType="email-address"
@@ -205,8 +219,11 @@ export default function RegisterScreen({
               placeholderTextColor="#AAAAAA"
               value={password}
               onChangeText={setPassword}
+              onFocus={() => setPasswordFocus(true)}
+              onBlur={() => setPasswordFocus(false)}
               style={[
                 styles.input,
+                passwordFocus && styles.inputFocus,
                 errors.password ? styles.inputError : undefined,
               ]}
               secureTextEntry
@@ -220,8 +237,11 @@ export default function RegisterScreen({
               placeholderTextColor="#AAAAAA"
               value={confirmPassword}
               onChangeText={setConfirmPassword}
+              onFocus={() => setConfirmPasswordFocus(true)}
+              onBlur={() => setConfirmPasswordFocus(false)}
               style={[
                 styles.input,
+                confirmPasswordFocus && styles.inputFocus,
                 errors.confirmPassword ? styles.inputError : undefined,
               ]}
               secureTextEntry
@@ -261,9 +281,6 @@ export default function RegisterScreen({
                 />
               </View>
             ) : null}
-            <Text style={styles.creditText}>
-              Made by {organisationMetadata.madeBy}
-            </Text>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -330,6 +347,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     color: "#111111",
     fontSize: 15,
+  },
+  inputFocus: {
+    borderColor: "#2196f3",
+    borderWidth: 2,
   },
   inputError: {
     borderColor: "#D93025",
